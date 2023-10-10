@@ -1,11 +1,12 @@
-import express from 'express';
+import express from "express";
+import { config } from "./config";
 
 const app = express();
 
-app.get('/', (req, res) => {
-	res.send('Hello World!');
+app.get("/", (req, res) => {
+  res.send("Hello World!");
 });
 
-app.listen(3000, () => {
-	console.log('Server running on port 3000');
+app.listen(config.PORT, () => {
+  console.log(`Server running on port ${config.PORT}!`);
 });

@@ -7,5 +7,14 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "scripts": {
+    "start": "bun run .",
+    "build": "bun build .",
+    "test": "bun test .",
+    "dev": "bun --watch ."
   }
 }

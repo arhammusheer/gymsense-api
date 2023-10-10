@@ -3,6 +3,7 @@
   "module": "app.ts",
   "type": "module",
   "devDependencies": {
+    "@types/express": "^4.17.18",
     "bun-types": "latest"
   },
   "peerDependencies": {

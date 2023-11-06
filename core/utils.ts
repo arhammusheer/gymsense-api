@@ -1,7 +1,12 @@
-import { randomBytes } from "crypto";
-
 export const KEY_LENGTH = 16;
 
 export const generateKey = (length: number) => {
-  return randomBytes(length).toString("hex");
+  const chars = "0123456789abcdefghijklmnopqrstuvwxyz";
+  let result = "";
+
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+
+  return result;
 };

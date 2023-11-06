@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Iot {
+  id  String @id @default(cuid())
+  key String
+
+  occupancy    Boolean @default(false)
+  batteryLevel Int     @default(-1)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  IotLog IotLog[]
+}
+
+model Hub {
+  id  String @id @default(cuid())
+  key String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  IotLog IotLog[]
+}
+
+enum CHANGE_TYPE {
+  OCCUPANCY
+  BATTERY_LEVEL
+}
+
+model IotLog {
+  id String @id @default(cuid())
+
+  iotId String
+  iot   Iot    @relation(fields: [iotId], references: [id])
+
+  hubId String
+  hub   Hub    @relation(fields: [hubId], references: [id])
+
+  changeType CHANGE_TYPE
+  value      String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

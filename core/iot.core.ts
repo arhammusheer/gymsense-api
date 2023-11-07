@@ -27,7 +27,7 @@ export default class Iot {
       },
     });
     // If hub not found
-    if (!iot) throw new Error("Hub not found");
+    if (!iot) throw new Error("Iot Device not found");
     // If incorrect key
     if (iot.key !== this.key) throw new Error("Incorrect key");
     return true;
@@ -61,7 +61,7 @@ export default class Iot {
     await prisma.iotLog.create({
       data: {
         changeType: "BATTERY_LEVEL",
-        value: String(batteryLevel),
+        value: batteryLevel.toString(),
         iot: { connect: { id: this.id } },
         hub: { connect: { id: this.hubId } },
       },
@@ -83,7 +83,7 @@ export default class Iot {
     await prisma.iotLog.create({
       data: {
         changeType: "OCCUPANCY",
-        value: String(occupancy),
+        value: occupancy.toString(),
         iot: { connect: { id: this.id } },
         hub: { connect: { id: this.hubId } },
       },

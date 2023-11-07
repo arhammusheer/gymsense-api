@@ -22,7 +22,7 @@ export default class Hub {
       },
     });
     // If hub not found
-    if (!hub) throw new Error("Hub not found");
+    if (!hub) throw new Error("404:Hub not found");
     // If incorrect key
     if (hub.key !== this._key) throw new Error("Incorrect key");
     return true;

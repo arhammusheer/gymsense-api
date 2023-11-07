@@ -1,16 +1,22 @@
 FROM oven/bun as bun
 
 # Express server running in bun
-WORKDIR /app
+WORKDIR /tmp
 
+# Copy the app
 COPY . .
-RUN cd /app && bun install
+
+# Install dependencies
+RUN bun install
 RUN bun x prisma generate
 
-# Make the ./generated folder available to the remaining code
-VOLUME /app/generated
+# Setup the docker image
+FROM bun as app
 
-# Run the server
+# Copy the app
+COPY --from=bun /tmp .
 
+# Expose the port
+EXPOSE 3000
 CMD ["bun", "start"]
 

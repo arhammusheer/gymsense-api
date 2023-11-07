@@ -6,5 +6,7 @@ COPY . .
 RUN bun install
 RUN bun x prisma generate
 
+COPY . .
+
 CMD ["bun", "start"]
 

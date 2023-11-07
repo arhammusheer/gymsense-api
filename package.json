@@ -16,7 +16,7 @@
   },
   "scripts": {
     "start": "bun run .",
-    "build": "bun build .",
+    "build": "bun build --minify --splitting --outdir=out .",
     "test": "bun test .",
     "dev": "bun --watch ."
   }

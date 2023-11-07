@@ -1,11 +1,17 @@
 {
   "name": "gymsense-api",
-  "module": "app.ts",
+  "module": "src/app.ts",
   "type": "module",
   "devDependencies": {
     "@types/express": "^4.17.18",
     "bun-types": "latest"
   },
+  "entrypoints": [
+    {
+      "entry": "app.ts",
+      "outdir": "out"
+    }
+  ],
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
@@ -16,7 +22,7 @@
   },
   "scripts": {
     "start": "bun run .",
-    "build": "bun build --minify --splitting --outdir=out .",
+    "build": "bun build --minify --splitting --outdir=dist .",
     "test": "bun test .",
     "dev": "bun --watch ."
   }

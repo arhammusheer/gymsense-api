@@ -27,3 +27,5 @@ This project uses node.js and express to create a RESTful API for the gymsense p
 | POST | /iot/status | Updates the status of an iot device | ```json {hub_id: string, hub_key: string, id: string, key: string, battery_level: number, occupancy: boolean}``` |
 
 
+## Hosted URL on railway.app
+https://gymsense-api-production.up.railway.app/

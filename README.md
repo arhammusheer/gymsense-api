@@ -19,4 +19,11 @@ This project uses node.js and express to create a RESTful API for the gymsense p
 13. Run `npm run prisma:generate` to generate the prisma client
 
 
-## Usage
+## API Endpoints
+| Method | Endpoint | Description | Body |
+| --- | --- | --- | --- |
+| POST | /hub/create | Creates a new hub and generates a key | None |
+| POST | /iot/create | Creates a new iot device and generates a key | None |
+| POST | /iot/status | Updates the status of an iot device | {hub_id: string, hub_key: string, id: string, key: string, battery_level: number, occupancy: boolean} |
+
+

@@ -24,6 +24,6 @@ This project uses node.js and express to create a RESTful API for the gymsense p
 | --- | --- | --- | --- |
 | POST | /hub/create | Creates a new hub and generates a key | None |
 | POST | /iot/create | Creates a new iot device and generates a key | None |
-| POST | /iot/status | Updates the status of an iot device | {hub_id: string, hub_key: string, id: string, key: string, battery_level: number, occupancy: boolean} |
+| POST | /iot/status | Updates the status of an iot device | ```json {hub_id: string, hub_key: string, id: string, key: string, battery_level: number, occupancy: boolean}``` |
 
 

@@ -49,9 +49,31 @@ const iotController = {
   },
 
   // TODO: Protect this route
-  create: async (_: Request, res: Response) => {
-    const iot = await Iot.create();
-    res.json({ iot });
+  create: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (
+        !req.user.permissions.hasPermission({
+          domain: "iot",
+          action: "create",
+          target: null,
+        })
+      ) {
+        throw new Error("403:Insufficient permission");
+      }
+
+      console.log(
+        req.user.permissions.hasPermission({
+          domain: "iot",
+          action: "create",
+          target: null,
+        })
+      );
+
+      const iot = await Iot.create();
+      res.json({ iot });
+    } catch (err) {
+      next(err);
+    }
   },
 };
 

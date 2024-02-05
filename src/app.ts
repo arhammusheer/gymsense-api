@@ -29,8 +29,9 @@ app.use((err: Error, _: any, res: any, __: any) => {
 
   const errMessage = err.message.split(":");
   const statusCode = parseInt(errMessage[0]);
-  
-  const message = errMessage.length > 1 ? errMessage.slice(1).join(":") : errMessage[0];
+
+  const message =
+    errMessage.length > 1 ? errMessage.slice(1).join(":") : errMessage[0];
 
   res.status(statusCode || 500).json({
     status: false,

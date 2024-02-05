@@ -8,6 +8,7 @@ import {
   VerifyOptions,
   JwtPayload,
 } from "jsonwebtoken";
+import PermissionCore from "./permissions.core";
 
 const prisma = new PrismaClient();
 
@@ -16,9 +17,11 @@ const TOKEN_ISSUER = "croissant-apis";
 
 export default class UserCore {
   private userData: User;
+  public permissions: PermissionCore;
 
   private constructor(userData: User) {
     this.userData = userData;
+    this.permissions = new PermissionCore(this);
   }
 
   // Create User
@@ -92,7 +95,7 @@ export default class UserCore {
     return this;
   }
 
-  async addPermission(permission: string) {
+  async _addPermission(permission: string) {
     // Check if permission already exists
     const exists = this.userData.permissions.some(
       (existingPermission) => existingPermission === permission
@@ -118,7 +121,7 @@ export default class UserCore {
     return this;
   }
 
-  async removePermission(permission: string) {
+  async _removePermission(permission: string) {
     // Check if permission exists
     const exists = this.userData.permissions.some(
       (existingPermission) => existingPermission === permission
@@ -146,7 +149,14 @@ export default class UserCore {
     return this;
   }
 
-  hasPermission(permission: string) {
+  _hasPermission(permission: string) {
+    if (this.userData.permissions.length === 0) {
+      return false;
+    }
+
+    console.log(this.userData.permissions, permission);
+    
+
     return this.userData.permissions.some(
       (existingPermission) => existingPermission === permission
     );

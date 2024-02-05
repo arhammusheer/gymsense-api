@@ -2,6 +2,7 @@ import express from "express";
 import { config } from "./config";
 import iotRouter from "./routes/iot.routes";
 import hubRouter from "./routes/hub.routes";
+import userRouter from "./routes/user.routes";
 const app = express();
 
 app.use(express.json());
@@ -9,6 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/iot", iotRouter);
 app.use("/hub", hubRouter);
+app.use("/user", userRouter);
 
 // Health check
 app.get("/", (_, res) => {
@@ -27,7 +29,8 @@ app.use((err: Error, _: any, res: any, __: any) => {
 
   const errMessage = err.message.split(":");
   const statusCode = parseInt(errMessage[0]);
-  const message = errMessage[1] || errMessage[0];
+  
+  const message = errMessage.length > 1 ? errMessage.slice(1).join(":") : errMessage[0];
 
   res.status(statusCode || 500).json({
     status: false,

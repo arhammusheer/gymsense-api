@@ -34,7 +34,7 @@ export default class UserCore {
     });
 
     if (existingUser) {
-      throw new Error("User already exists");
+      throw new Error("409:User already exists");
     }
 
     // Password Hashing

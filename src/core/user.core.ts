@@ -68,7 +68,7 @@ export default class UserCore {
     );
 
     if (!isPasswordCorrect) {
-      throw new Error("Invalid password");
+      throw new Error("401:Invalid password");
     }
 
     return new UserCore(user);
@@ -80,7 +80,7 @@ export default class UserCore {
       this.userData.password
     );
     if (!isPasswordCorrect) {
-      throw new Error("Invalid password");
+      throw new Error("401:Invalid password");
     }
     const hashedPassword = await passwordUtils.hash(newPassword);
     const user = await prisma.user.update({

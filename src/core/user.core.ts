@@ -150,13 +150,6 @@ export default class UserCore {
   }
 
   _hasPermission(permission: string) {
-    if (this.userData.permissions.length === 0) {
-      return false;
-    }
-
-    console.log(this.userData.permissions, permission);
-    
-
     return this.userData.permissions.some(
       (existingPermission) => existingPermission === permission
     );
@@ -211,7 +204,7 @@ export default class UserCore {
     });
 
     if (!user) {
-      throw new Error("User not found");
+      throw new Error("404:User not found");
     }
 
     return new UserCore(user);

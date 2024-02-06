@@ -11,7 +11,7 @@ type Domain = "user" | "iot" | "hub" | "admin";
 interface PermissionCheckOptions {
   domain: Domain; // The domain to check the permission for "user", "iot", "hub", "admin"
   action: Action; // The action to check the permission for "create", "read", "update", "delete
-  target: string | null; // The target to check the permission for (iot_id, hub_id, user_id, null)
+  target: string | "*"; // The target to check the permission for (iot_id, hub_id, user_id, *)
 }
 
 // Permission Structure "domain:action:target"
@@ -26,6 +26,9 @@ export default class PermissionCore {
   }
 
   hasPermission(options: PermissionCheckOptions): boolean {
+    // Override if admin
+    if (this.isAdmin) return true;
+
     const permission = `${options.domain}:${options.action}:${options.target}`;
     return this.user._hasPermission(permission);
   }
@@ -38,5 +41,10 @@ export default class PermissionCore {
   async removePermission(options: PermissionCheckOptions): Promise<void> {
     const permission = `${options.domain}:${options.action}:${options.target}`;
     await this.user._removePermission(permission);
+  }
+
+  private get isAdmin(): boolean {
+    // If user has "admin" role
+    return this.user._hasPermission("admin");
   }
 }

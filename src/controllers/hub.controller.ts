@@ -8,11 +8,11 @@ const hubController = {
         !req.user.permissions.hasPermission({
           domain: "hub",
           action: "create",
-          target: null,
+          target: "*",
         })
       )
-        throw new Error("403:Permission Denied");
-        
+        throw new Error(`403:Insufficient permissions, need 'hub:create:*'`);
+
       const hub = await Hub.create();
       res.json({ hub });
     } catch (err) {

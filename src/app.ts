@@ -3,10 +3,13 @@ import { config } from "./config";
 import iotRouter from "./routes/iot.routes";
 import hubRouter from "./routes/hub.routes";
 import userRouter from "./routes/user.routes";
+import morgan from "morgan";
+
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan("common"));
 
 app.use("/iot", iotRouter);
 app.use("/hub", hubRouter);

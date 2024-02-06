@@ -55,17 +55,17 @@ const iotController = {
         !req.user.permissions.hasPermission({
           domain: "iot",
           action: "create",
-          target: null,
+          target: "*",
         })
       ) {
-        throw new Error("403:Insufficient permission");
+        throw new Error("403:Insufficient permissions, need 'iot:create:*'");
       }
 
       console.log(
         req.user.permissions.hasPermission({
           domain: "iot",
           action: "create",
-          target: null,
+          target: "*",
         })
       );
 

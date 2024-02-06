@@ -31,16 +31,14 @@ export const passwordUtils = {
 
 export const bodyFieldExist = (body: any, fields: string[]) => {
   const missingFields: string[] = [];
-
   fields.forEach((field) => {
     if (!body[field]) {
       missingFields.push(field);
     }
   });
-
   if (missingFields.length > 0) {
     throw new Error(`400:Missing fields: ${missingFields.join(", ")}`);
   }
-
   return true;
 };
+

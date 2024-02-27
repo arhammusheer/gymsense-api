@@ -11,7 +11,7 @@ type Domain = "user" | "iot" | "hub" | "admin";
 interface PermissionCheckOptions {
   domain: Domain; // The domain to check the permission for "user", "iot", "hub", "admin"
   action: Action; // The action to check the permission for "create", "read", "update", "delete
-  target: string | "*"; // The target to check the permission for (iot_id, hub_id, user_id, *)
+  target: string | "*"; // The target to check the permission for (iot_id, hub_id, user_email, *)
 }
 
 // Permission Structure "domain:action:target"

@@ -8,6 +8,10 @@
 type Action = "create" | "read" | "update" | "delete";
 type Domain = "user" | "iot" | "hub" | "admin";
 
+// Permissions
+const allowedDomains: Domain[] = ["user", "iot", "hub", "admin"];
+const allowedActions: Action[] = ["create", "read", "update", "delete"];
+
 interface PermissionCheckOptions {
   domain: Domain; // The domain to check the permission for "user", "iot", "hub", "admin"
   action: Action; // The action to check the permission for "create", "read", "update", "delete
@@ -23,6 +27,21 @@ export default class PermissionCore {
 
   constructor(user: UserCore) {
     this.user = user;
+  }
+
+  static parse(permission: string): PermissionCheckOptions {
+    const [domain, action, target] = permission.split(":");
+    
+    // Validation Checks
+    if (!allowedDomains.includes(domain as Domain)) throw new Error("Invalid domain");
+    if (!allowedActions.includes(action as Action)) throw new Error("Invalid action");
+    if (target !== "*" && !target) throw new Error("Invalid target");
+
+    return { domain: domain as Domain, action: action as Action, target };
+  }
+
+  static stringify(options: PermissionCheckOptions): string {
+    return `${options.domain}:${options.action}:${options.target}`;
   }
 
   hasPermission(options: PermissionCheckOptions): boolean {

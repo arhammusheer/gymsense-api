@@ -209,4 +209,19 @@ export default class UserCore {
 
     return new UserCore(user);
   }
+
+  static async fromEmail(email: string) {
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      throw new Error("404:User not found");
+    }
+
+    return new UserCore(user);
+  }
+  
 }

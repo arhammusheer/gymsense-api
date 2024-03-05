@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Hub from "../core/hub.core";
 import Iot from "../core/iot.core";
+import { bodyFieldExist } from "../core/utils";
 
 const iotController = {
   statusUpdate: async (req: Request, res: Response, next: NextFunction) => {
@@ -20,14 +21,14 @@ const iotController = {
         battery_level: number;
         occupancy: boolean;
       };
-
-      if (!hubId) throw new Error("400:hub_id is required");
-      if (!hubKey) throw new Error("400:hub_key is required");
-      if (!iotId) throw new Error("400:id is required");
-      if (!iotKey) throw new Error("400:key is required");
-      if (batteryLevel === undefined)
-        throw new Error("battery_level is required");
-      if (occupancy === undefined) throw new Error("occupancy is required");
+      bodyFieldExist(req.body, [
+        "hub_id",
+        "hub_key",
+        "id",
+        "key",
+        "battery_level",
+        "occupancy",
+      ]);
 
       const hub = await Hub.initialize({ id: hubId, key: hubKey });
       const iot = await Iot.initialize({

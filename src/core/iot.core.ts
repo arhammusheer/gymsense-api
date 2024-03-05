@@ -1,36 +1,14 @@
 import prisma from "../prisma";
 import { KEY_LENGTH, generateKey } from "./utils";
+import { Iot as IotData } from "@prisma/client";
 
 export default class Iot {
-  private id: string;
-  private key: string;
+  private data: IotData;
   private hubId: string;
 
-  private constructor({
-    id,
-    key,
-    hubId,
-  }: {
-    id: string;
-    key: string;
-    hubId: string;
-  }) {
-    this.id = id;
-    this.key = key;
-    this.hubId = hubId;
-  }
-
-  private async isAuthenticated(): Promise<boolean> {
-    const iot = await prisma.iot.findUnique({
-      where: {
-        id: this.id,
-      },
-    });
-    // If hub not found
-    if (!iot) throw new Error("Iot Device not found");
-    // If incorrect key
-    if (iot.key !== this.key) throw new Error("Incorrect key");
-    return true;
+  private constructor(data: IotData & { hubId: string }) {
+    this.data = data;
+    this.hubId = data.hubId;
   }
 
   public static async initialize({
@@ -42,9 +20,16 @@ export default class Iot {
     key: string;
     hubId: string;
   }): Promise<Iot> {
-    const iot = new Iot({ id, key, hubId });
-    await iot.isAuthenticated();
-    return iot;
+    const iotFromDb = await prisma.iot.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!iotFromDb) throw new Error("Iot Device not found");
+    if (iotFromDb.key !== key) throw new Error("Incorrect key");
+
+    return new Iot({ ...iotFromDb, hubId });
   }
 
   public async updateBatteryLevel({ batteryLevel }: { batteryLevel: number }) {
@@ -62,7 +47,7 @@ export default class Iot {
       data: {
         changeType: "BATTERY_LEVEL",
         value: batteryLevel.toString(),
-        iot: { connect: { id: this.id } },
+        iot: { connect: { id: this.data.id } },
         hub: { connect: { id: this.hubId } },
       },
     });
@@ -70,7 +55,7 @@ export default class Iot {
     // Update battery level
     await prisma.iot.update({
       where: {
-        id: this.id,
+        id: this.data.id,
       },
       data: {
         batteryLevel,
@@ -84,7 +69,7 @@ export default class Iot {
       data: {
         changeType: "OCCUPANCY",
         value: occupancy.toString(),
-        iot: { connect: { id: this.id } },
+        iot: { connect: { id: this.data.id } },
         hub: { connect: { id: this.hubId } },
       },
     });
@@ -92,7 +77,7 @@ export default class Iot {
     // Update occupancy
     await prisma.iot.update({
       where: {
-        id: this.id,
+        id: this.data.id,
       },
       data: {
         occupancy,

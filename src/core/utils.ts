@@ -32,7 +32,8 @@ export const passwordUtils = {
 export const bodyFieldExist = (body: any, fields: string[]) => {
   const missingFields: string[] = [];
   fields.forEach((field) => {
-    if (!body[field]) {
+    // Allow body field to be string, number, or boolean including 0 and false
+    if (body[field] === undefined || body[field] === null) {
       missingFields.push(field);
     }
   });

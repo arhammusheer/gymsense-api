@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import UserCore from "../core/user.core";
 import { bodyFieldExist, isEmail } from "../core/utils";
-import PermissionCore from "../core/permissions.core";
+import PermissionCore, { Permission } from "../core/permissions.core";
 
 const userController = {
   async login(req: Request, res: Response, next: NextFunction) {
@@ -43,7 +43,7 @@ const userController = {
 
       if (!isEmail(email)) throw new Error("400:Invalid email");
 
-      const { action, domain, target } = PermissionCore.parse(permission);
+      const { action, domain, target } = Permission.fromString(permission);
 
       // Check if current user has permission to add permission
       const canEditThisUser = req.user.permissions.hasPermission({
@@ -78,7 +78,7 @@ const userController = {
 
       if (!isEmail(email)) throw new Error("400:Invalid email");
 
-      const { action, domain, target } = PermissionCore.parse(permission);
+      const { action, domain, target } = Permission.fromString(permission);
 
       // Check if current user has permission to remove permission
       const canEditThisUser = req.user.permissions.hasPermission({

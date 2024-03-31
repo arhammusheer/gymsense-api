@@ -117,7 +117,7 @@ export default class PermissionCore {
   }
 }
 
-class Permission {
+export class Permission {
   domain: Domain;
   action: Action;
   target: string;

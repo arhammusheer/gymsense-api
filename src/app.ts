@@ -5,6 +5,7 @@ import hubRouter from "./routes/hub.routes";
 import userRouter from "./routes/user.routes";
 import morgan from "morgan";
 import cors from "cors";
+import OpenApi from "./openapi";
 
 const app = express();
 
@@ -24,6 +25,10 @@ app.get("/", (_, res) => {
   res.json({
     status: true,
   });
+});
+
+app.get("/openapi.json", (_, res) => {
+  res.json(OpenApi.getDocument());
 });
 
 // Handle Errors

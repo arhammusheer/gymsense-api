@@ -49,7 +49,6 @@ const iotController = {
     }
   },
 
-  // TODO: Protect this route
   create: async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (
@@ -72,6 +71,20 @@ const iotController = {
 
       const iot = await Iot.create();
       res.json({ iot });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  get: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params as { id: string };
+
+      const hasGetPermission = req.user.permissions.hasPermission({
+        domain: "iot",
+        action: "read",
+        target: id,
+      });
     } catch (err) {
       next(err);
     }

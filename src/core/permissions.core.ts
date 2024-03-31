@@ -15,7 +15,13 @@ const allowedActions: Action[] = ["create", "read", "update", "delete"];
 interface PermissionCheckOptions {
   domain: Domain; // The domain to check the permission for "user", "iot", "hub", "admin"
   action: Action; // The action to check the permission for "create", "read", "update", "delete
-  target: string | "*"; // The target to check the permission for (iot_id, hub_id, user_email, *)
+  target: string | "*" | string[]; // The target to check the permission for (iot_id, hub_id, user_email, *)
+}
+
+interface PermissionCheckOptionsMultiTarget {
+  domain: Domain; // The domain to check the permission for "user", "iot", "hub", "admin"
+  action: Action; // The action to check the permission for "create", "read", "update", "delete
+  targets: string[]; // The targets to check the permission for (iot_id, hub_id, user_email, *)
 }
 
 // Permission Structure "domain:action:target"
@@ -31,10 +37,12 @@ export default class PermissionCore {
 
   static parse(permission: string): PermissionCheckOptions {
     const [domain, action, target] = permission.split(":");
-    
+
     // Validation Checks
-    if (!allowedDomains.includes(domain as Domain)) throw new Error("Invalid domain");
-    if (!allowedActions.includes(action as Action)) throw new Error("Invalid action");
+    if (!allowedDomains.includes(domain as Domain))
+      throw new Error("Invalid domain");
+    if (!allowedActions.includes(action as Action))
+      throw new Error("Invalid action");
     if (target !== "*" && !target) throw new Error("Invalid target");
 
     return { domain: domain as Domain, action: action as Action, target };
@@ -44,12 +52,32 @@ export default class PermissionCore {
     return `${options.domain}:${options.action}:${options.target}`;
   }
 
-  hasPermission(options: PermissionCheckOptions): boolean {
+  hasPermission(options: PermissionCheckOptions): boolean | boolean[] {
     // Override if admin
     if (this.isAdmin) return true;
 
-    const permission = `${options.domain}:${options.action}:${options.target}`;
-    return this.user._hasPermission(permission);
+    const domain = options.domain;
+    const action = options.action;
+
+    // Handle multi target
+    const targets = Array.isArray(options.target)
+      ? options.target
+      : [options.target];
+
+    // Check for each target
+    const allowed = targets.map((target) => {
+      const permission = `${domain}:${action}:${target}`;
+      const wildcardPermission = `${domain}:${action}:*`;
+      return (
+        this.user._hasPermission(permission) ||
+        this.user._hasPermission(wildcardPermission)
+      );
+    });
+
+    // If single target return boolean
+    if (allowed.length === 1) return allowed[0];
+
+    return allowed;
   }
 
   async addPermission(options: PermissionCheckOptions): Promise<void> {

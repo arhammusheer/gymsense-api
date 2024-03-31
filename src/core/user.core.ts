@@ -223,5 +223,14 @@ export default class UserCore {
 
     return new UserCore(user);
   }
-  
+
+  static async getAll(limit?: number, offset?: number) {
+    // Get all users, strip sensitive data
+    const users = await prisma.user.findMany({
+      select: { email: true, permissions: true },
+      take: limit || 10,
+      skip: offset || 0,
+    });
+    return users.map((user) => new UserCore({ ...user, password: "REDACTED" }));
+  }
 }

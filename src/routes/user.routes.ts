@@ -10,4 +10,7 @@ userRouter.post("/register", userController.register);
 userRouter.post("/permission/add", userController.addPermission);
 userRouter.post("/permission/remove", userController.removePermission);
 
+// User management routes
+userRouter.post("/", userController.getList);
+
 export default userRouter;

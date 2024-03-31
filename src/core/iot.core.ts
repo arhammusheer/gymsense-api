@@ -34,13 +34,23 @@ export default class Iot {
 
   public async updateBatteryLevel({ batteryLevel }: { batteryLevel: number }) {
     // Validate battery level 0 to 1 or is -1
-    const check_nobar = batteryLevel === -1;
-    const check_bar = batteryLevel >= 0 && batteryLevel <= 1;
+    const isValidBatteryLevel =
+      batteryLevel === -1 || (batteryLevel >= 0 && batteryLevel <= 1);
 
-    if (!check_nobar && !check_bar)
+    if (!isValidBatteryLevel)
       throw new Error(
         "Battery level must be between 0 and 1 or -1 for no-battery"
       );
+
+    // Update battery level
+    this.data = await prisma.iot.update({
+      where: {
+        id: this.data.id,
+      },
+      data: {
+        batteryLevel,
+      },
+    });
 
     // Log battery level update
     await prisma.iotLog.create({
@@ -51,19 +61,19 @@ export default class Iot {
         hub: { connect: { id: this.hubId } },
       },
     });
+  }
 
-    // Update battery level
-    await prisma.iot.update({
+  public async updateOccupancy({ occupancy }: { occupancy: boolean }) {
+    // Update occupancy
+    this.data = await prisma.iot.update({
       where: {
         id: this.data.id,
       },
       data: {
-        batteryLevel,
+        occupancy,
       },
     });
-  }
 
-  public async updateOccupancy({ occupancy }: { occupancy: boolean }) {
     // Log occupancy update
     await prisma.iotLog.create({
       data: {
@@ -71,16 +81,6 @@ export default class Iot {
         value: occupancy.toString(),
         iot: { connect: { id: this.data.id } },
         hub: { connect: { id: this.hubId } },
-      },
-    });
-
-    // Update occupancy
-    await prisma.iot.update({
-      where: {
-        id: this.data.id,
-      },
-      data: {
-        occupancy,
       },
     });
   }

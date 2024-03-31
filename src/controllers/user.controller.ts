@@ -52,13 +52,7 @@ const userController = {
         target: email,
       });
 
-      const canEditAnyUser = req.user.permissions.hasPermission({
-        domain: "user",
-        action: "update",
-        target: "*",
-      });
-
-      if (!canEditThisUser && !canEditAnyUser) {
+      if (!canEditThisUser) {
         throw new Error("You do not have permission to add permission");
       }
 
@@ -93,13 +87,7 @@ const userController = {
         target: email,
       });
 
-      const canEditAnyUser = req.user.permissions.hasPermission({
-        domain: "user",
-        action: "update",
-        target: "*",
-      });
-
-      if (!canEditThisUser && !canEditAnyUser) {
+      if (!canEditThisUser) {
         throw new Error("You do not have permission to remove permission");
       }
 
@@ -115,6 +103,26 @@ const userController = {
         target,
       });
       res.json({ status: true });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async getList(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { limit, offset, users } = req.query as {
+        limit: string;
+        offset: string;
+        users: string[];
+      };
+
+
+        
+
+      const parsedLimit = parseInt(limit) || 10;
+      const parsedOffset = parseInt(offset) || 0;
+
+      res.json({ users });
     } catch (err) {
       next(err);
     }

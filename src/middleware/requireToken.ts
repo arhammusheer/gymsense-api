@@ -10,7 +10,7 @@ declare module "express-serve-static-core" {
   }
 }
 
-const requireToken = async (
+export const requireToken = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -37,4 +37,23 @@ const requireToken = async (
   }
 };
 
-export default requireToken;
+// Inject user if token is present or else continue
+export const optionalToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const token = req.header("Authorization");
+    if (!token) return next();
+    const user = await UserCore.fromToken(token);
+
+    req.user = user;
+
+    next();
+  } catch (err: string | any) {
+    // No Error
+    req.user = {} as UserCore;
+    next();
+  }
+};

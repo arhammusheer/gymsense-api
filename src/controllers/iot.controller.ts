@@ -112,7 +112,10 @@ const iotController = {
       const elevatedIds = user.permissions.getIds("iot", "read");
       const iots = await Iot.getAll(elevatedIds);
 
-      res.json({ data: iots });
+      res.json({ 
+        status: true,
+        data: iots,
+      });
     } catch (err) {
       next(err);
     }

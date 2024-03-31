@@ -7,12 +7,14 @@ import morgan from "morgan";
 import cors from "cors";
 import OpenApi from "./openapi";
 import publicRouter from "./routes/public.routes";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("common"));
+app.use(cookieParser());
 
 // TODO: Remove this in production and add a whitelist
 app.use(cors());

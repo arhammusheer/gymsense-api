@@ -13,11 +13,27 @@ const userController = {
 
       const user = await UserCore.login(email, password);
       const token = await user.generateToken();
+
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+      });
+
       res.json({ user, token });
     } catch (err) {
       next(err);
     }
   },
+
+  async recoverLogin(req: Request, res: Response, next: NextFunction) {
+    try {
+      const token = req.cookies.token;
+      res.json({user: req.user.toJSON(), token: token});
+    } catch (err) {
+      next(err);
+    }
+  },
+
 
   async register(req: Request, res: Response, next: NextFunction) {
     try {

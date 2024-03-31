@@ -13,4 +13,7 @@ userRouter.post("/permission/remove", userController.removePermission);
 // User management routes
 userRouter.post("/", userController.getList);
 
+// Recover session from token
+userRouter.post("/recover", userController.recoverLogin);
+
 export default userRouter;

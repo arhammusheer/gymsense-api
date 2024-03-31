@@ -94,7 +94,7 @@ const iotController = {
     try {
       const user = req.user;
       if (!user) {
-        return res.json({ iots: await Iot.getAll() });
+        return res.json({ status: false, data: await Iot.getAll() });
       }
       // Handle wildcard permission
       if (

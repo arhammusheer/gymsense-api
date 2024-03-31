@@ -2,6 +2,11 @@ import prisma from "../prisma";
 import { KEY_LENGTH, generateKey } from "./utils";
 import { Iot as IotData } from "@prisma/client";
 
+interface restrictedIotData {
+  id: string;
+  occupancy: boolean;
+}
+
 export default class Iot {
   private data: IotData;
   private hubId: string;
@@ -87,6 +92,45 @@ export default class Iot {
 
   private static generateKey(): string {
     return `iot-${generateKey(KEY_LENGTH)}`;
+  }
+
+  public static async getAll(
+    extendedIds: string[] = [],
+    admin?: boolean
+  ): Promise<Iot[] | restrictedIotData[]> {
+    // If admin, get all fields
+    if (admin) {
+      return prisma.iot.findMany();
+    }
+
+    // For ids listed in extendedIds, get all fields
+
+    let iots: IotData[] = [];
+
+    if (extendedIds.length) {
+      iots = await prisma.iot.findMany({
+        where: {
+          id: {
+            in: extendedIds,
+          },
+        },
+      });
+    }
+
+    // For all other ids, get only id and occupancy
+    const restrictedIots = await prisma.iot.findMany({
+      where: {
+        id: {
+          notIn: extendedIds,
+        },
+      },
+      select: {
+        id: true,
+        occupancy: true,
+      },
+    });
+
+    return [...iots, ...restrictedIots];
   }
 
   // Create Hub device

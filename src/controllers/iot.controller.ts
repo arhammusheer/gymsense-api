@@ -89,6 +89,34 @@ const iotController = {
       next(err);
     }
   },
+
+  getAll: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = req.user;
+      if (!user) {
+        return res.json({ iots: await Iot.getAll() });
+      }
+      // Handle wildcard permission
+      if (
+        user.permissions.hasPermission({
+          domain: "iot",
+          action: "read",
+          target: "*",
+        })
+      ) {
+        const iots = await Iot.getAll();
+        return res.json({ iots });
+      }
+
+      // Handle regular user
+      const elevatedIds = user.permissions.getIds("iot", "read");
+      const iots = await Iot.getAll(elevatedIds);
+
+      res.json({ iots });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
 
 export default iotController;

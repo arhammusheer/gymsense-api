@@ -19,6 +19,10 @@ export default class UserCore {
   private userData: User;
   public permissions: PermissionCore;
 
+  get email() {
+    return this.userData.email;
+  }
+
   private constructor(userData: User) {
     this.userData = userData;
     this.permissions = new PermissionCore(this);
@@ -95,64 +99,17 @@ export default class UserCore {
     return this;
   }
 
-  async _addPermission(permission: string) {
-    // Check if permission already exists
-    const exists = this.userData.permissions.some(
-      (existingPermission) => existingPermission === permission
-    );
-
-    if (exists) {
-      throw new Error("Permission already exists");
-    }
-
+  async updatePermissions(permissions: string[]) {
     const user = await prisma.user.update({
       where: {
         email: this.userData.email,
       },
       data: {
-        permissions: {
-          push: permission,
-        },
+        permissions: permissions,
       },
     });
-
     this.userData = user;
-
     return this;
-  }
-
-  async _removePermission(permission: string) {
-    // Check if permission exists
-    const exists = this.userData.permissions.some(
-      (existingPermission) => existingPermission === permission
-    );
-
-    if (!exists) {
-      throw new Error("Permission does not exist");
-    }
-
-    const user = await prisma.user.update({
-      where: {
-        email: this.userData.email,
-      },
-      data: {
-        permissions: {
-          set: this.userData.permissions.filter(
-            (existingPermission) => existingPermission !== permission
-          ),
-        },
-      },
-    });
-
-    this.userData = user;
-
-    return this;
-  }
-
-  _hasPermission(permission: string) {
-    return this.userData.permissions.some(
-      (existingPermission) => existingPermission === permission
-    );
   }
 
   getPermissions() {
@@ -166,9 +123,7 @@ export default class UserCore {
     };
   }
 
-  get email() {
-    return this.userData.email;
-  }
+  
 
   async generateToken() {
     const payload: JwtPayload = {

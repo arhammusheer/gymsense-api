@@ -11,6 +11,7 @@ iotRouter.post("/create", requireToken, iotController.create);
 
 // Removes secrets when token is not present
 iotRouter.get("/:id", optionalToken, iotController.get);
+iotRouter.get("/", optionalToken, iotController.getAll);
 
 // Add Status Route to document
 OpenApi.addRouteToOpenApiDocument("/iot/status", "post", {

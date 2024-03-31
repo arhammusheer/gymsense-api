@@ -6,6 +6,7 @@ import userRouter from "./routes/user.routes";
 import morgan from "morgan";
 import cors from "cors";
 import OpenApi from "./openapi";
+import publicRouter from "./routes/public.routes";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(cors());
 app.use("/iot", iotRouter);
 app.use("/hub", hubRouter);
 app.use("/user", userRouter);
+app.use("/public", publicRouter);
 
 // Health check
 app.get("/", (_, res) => {

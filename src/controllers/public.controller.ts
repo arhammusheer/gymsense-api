@@ -5,10 +5,10 @@ const publicController = {
   iot: {
     get: async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const iot = prisma.iot.findMany({
+        const iot = await prisma.iot.findMany({
           select: {
-            occupancy: true,
             id: true,
+            occupancy: true,
           },
         });
 

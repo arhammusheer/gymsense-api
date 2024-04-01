@@ -103,11 +103,7 @@ export default class PermissionCore {
 
   private get isAdmin(): boolean {
     // If user has "admin" role
-    return this.hasPermission({
-      domain: "admin",
-      action: "admin",
-      target: "*",
-    });
+    return this.get({ domain: "admin", action: "admin" }).length > 0;
   }
 
   getIds(domain: Domain, action: Action): string[] {

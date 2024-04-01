@@ -47,12 +47,13 @@ export const optionalToken = async (
     const token = req.header("Authorization");
     if (!token) return next();
     const user = await UserCore.fromToken(token);
-
+    if (!user) return next();
     req.user = user;
 
     next();
   } catch (err: string | any) {
     // No Error
+    console.log(err);
     req.user = {} as UserCore;
     next();
   }

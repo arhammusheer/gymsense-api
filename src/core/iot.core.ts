@@ -142,4 +142,24 @@ export default class Iot {
     });
     return iot;
   }
+
+  public static async get(id: string, elevated: boolean = false) {
+    if (elevated) {
+      return prisma.iot.findUnique({
+        where: {
+          id,
+        },
+      });
+    }
+
+    return prisma.iot.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        occupancy: true,
+      },
+    });
+  }
 }

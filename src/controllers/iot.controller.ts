@@ -79,12 +79,28 @@ const iotController = {
   get: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params as { id: string };
+      const user = req.user;
 
-      const hasGetPermission = req.user.permissions.hasPermission({
-        domain: "iot",
-        action: "read",
-        target: id,
-      });
+      if (!user) {
+        const iot = await Iot.get(id);
+        return res.json({ status: true, data: iot });
+      }
+
+      if (
+        user.permissions.hasPermission({
+          domain: "iot",
+          action: "read",
+          target: "*",
+        }) ||
+        user.permissions.hasPermission({
+          domain: "iot",
+          action: "read",
+          target: id,
+        })
+      ) {
+        const iot = await Iot.get(id);
+        return res.json({ status: true, data: iot });
+      }
     } catch (err) {
       next(err);
     }

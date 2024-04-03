@@ -139,6 +139,41 @@ const iotController = {
       next(err);
     }
   },
+  // PUT
+  update: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params as { id: string };
+      const user = req.user;
+      const { name, location } = req.body as { name: string; location: string };
+
+      if (!user) {
+        throw new Error("401: Not authenticated");
+      }
+
+      if (
+        !user.permissions.hasPermission({
+          domain: "iot",
+          action: "update",
+          target: id,
+        }) ||
+        !user.permissions.hasPermission({
+          domain: "iot",
+          action: "update",
+          target: "*",
+        })
+      ) {
+        throw new Error(
+          `403:Insufficient permissions, need 'iot:update:${id}'`
+        );
+      }
+
+      const iot = await Iot.update(id, { name, location });
+
+      res.json({ status: true, data: iot });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
 
 export default iotController;

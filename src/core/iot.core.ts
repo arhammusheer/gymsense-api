@@ -5,6 +5,8 @@ import { Iot as IotData } from "@prisma/client";
 interface restrictedIotData {
   id: string;
   occupancy: boolean;
+  name: string;
+  location: string;
 }
 
 export default class Iot {
@@ -127,6 +129,8 @@ export default class Iot {
       select: {
         id: true,
         occupancy: true,
+        name: true,
+        location: true,
       },
     });
 
@@ -160,6 +164,18 @@ export default class Iot {
         id: true,
         occupancy: true,
       },
+    });
+  }
+
+  public static async update(
+    id: string,
+    data: { name: string; location: string }
+  ) {
+    return prisma.iot.update({
+      where: {
+        id,
+      },
+      data,
     });
   }
 }

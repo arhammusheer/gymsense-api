@@ -124,7 +124,7 @@ const iotController = {
         })
       ) {
         const iots = await Iot.getAll();
-        return res.json({ iots });
+        return res.json({ status: true, data: iots });
       }
 
       // Handle regular user

@@ -86,21 +86,24 @@ const iotController = {
         return res.json({ status: true, data: iot });
       }
 
-      if (
-        user.permissions.hasPermission({
-          domain: "iot",
-          action: "read",
-          target: "*",
-        }) ||
+      const hasPermission =
         user.permissions.hasPermission({
           domain: "iot",
           action: "read",
           target: id,
-        })
-      ) {
-        const iot = await Iot.get(id);
-        return res.json({ status: true, data: iot });
-      }
+        }) ||
+        user.permissions.hasPermission({
+          domain: "iot",
+          action: "read",
+          target: "*",
+        });
+
+      const iot = await Iot.get(id, hasPermission);
+
+      res.json({
+        status: true,
+        data: iot,
+      });
     } catch (err) {
       next(err);
     }

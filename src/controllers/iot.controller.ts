@@ -123,7 +123,7 @@ const iotController = {
           target: "*",
         })
       ) {
-        const iots = await Iot.getAll();
+        const iots = await Iot.getAll([], true);
         return res.json({ status: true, data: iots });
       }
 

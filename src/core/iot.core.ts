@@ -163,6 +163,8 @@ export default class Iot {
       select: {
         id: true,
         occupancy: true,
+        name: true,
+        location: true,
       },
     });
   }

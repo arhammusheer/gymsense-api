@@ -18,6 +18,7 @@ const userController = {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
+        expires: new Date(Date.now() + 1000 * 60 * 60 ), // 1 hour
       });
 
       res.json({ user, token });

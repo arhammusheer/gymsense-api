@@ -18,7 +18,7 @@ const userController = {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "none",
-        domain: process.env.NODE_ENV === "production" ? ".sdp.croissant.one" : "",
+        domain: process.env.NODE_ENV === "production" ? ".croissant.one" : "",
         expires: new Date(Date.now() + 1000 * 60 * 60 ), // 1 hour
       });
 

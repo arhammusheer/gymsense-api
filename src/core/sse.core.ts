@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import UserCore from "./user.core";
 
 // Define the SSE event types
 interface SSEEvent {
@@ -10,7 +11,7 @@ interface IotEvent extends SSEEvent {
     id: string;
     name: string;
     occupancy: boolean;
-		location: string;
+    location: string;
   };
 }
 interface NotificationEvent extends SSEEvent {
@@ -29,10 +30,10 @@ const connections = new Set<SSECore>();
 
 export default class SSECore {
   connection: Connection;
-  constructor(req: Request, res: Response) {
+  constructor(user: UserCore, res: Response) {
     this.connection = {
       response: res,
-      id: req.user.email,
+      id: user.email,
     };
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");

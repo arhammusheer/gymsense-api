@@ -35,7 +35,7 @@ app.use("/hub", hubRouter);
 app.use("/user", userRouter);
 app.use("/public", publicRouter);
 
-app.get("/notifications", requireToken, notifications);
+app.get("/notifications", notifications);
 
 // Health check
 app.get("/", (_, res) => {

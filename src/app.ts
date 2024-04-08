@@ -9,6 +9,7 @@ import OpenApi from "./openapi";
 import publicRouter from "./routes/public.routes";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
+import { notifications } from "./controllers/notification.controller";
 
 const app = express();
 
@@ -32,6 +33,8 @@ app.use("/iot", iotRouter);
 app.use("/hub", hubRouter);
 app.use("/user", userRouter);
 app.use("/public", publicRouter);
+
+app.get("/notifications", notifications);
 
 // Health check
 app.get("/", (_, res) => {

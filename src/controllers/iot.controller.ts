@@ -212,6 +212,23 @@ const iotController = {
       }
 
       await Iot.delete(id);
+      
+      await user.permissions.removePermission({
+        domain: "iot",
+        action: "read",
+        target: id,
+      });
+      await user.permissions.removePermission({
+        domain: "iot",
+        action: "update",
+        target: id,
+      });
+      await user.permissions.removePermission({
+        domain: "iot",
+        action: "delete",
+        target: id,
+      });
+      
 
       res.json({ status: true });
     } catch (err) {

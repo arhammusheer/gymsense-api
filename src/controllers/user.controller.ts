@@ -32,7 +32,7 @@ const userController = {
   async recoverLogin(req: Request, res: Response, next: NextFunction) {
     try {
       const token = req.cookies.token;
-      const user = await UserCore.fromToken(token);
+      const user = await UserCore.fromToken(token).catch(() => null); // Defuse error
 
       if (!user) {
         throw new Error("401:Invalid token");

@@ -8,6 +8,7 @@ import cors from "cors";
 import OpenApi from "./openapi";
 import publicRouter from "./routes/public.routes";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
 
 const app = express();
 
@@ -15,9 +16,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("common"));
 app.use(cookieParser());
+app.use(helmet());
 
 // TODO: Remove this in production and add a whitelist
-app.use(cors());
+app.use(
+  cors({
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 app.use("/iot", iotRouter);
 app.use("/hub", hubRouter);

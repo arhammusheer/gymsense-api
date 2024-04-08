@@ -10,6 +10,7 @@ import publicRouter from "./routes/public.routes";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import { notifications } from "./controllers/notification.controller";
+import { requireToken } from "./middleware/requireToken";
 
 const app = express();
 
@@ -34,7 +35,7 @@ app.use("/hub", hubRouter);
 app.use("/user", userRouter);
 app.use("/public", publicRouter);
 
-app.get("/notifications", notifications);
+app.get("/notifications", requireToken, notifications);
 
 // Health check
 app.get("/", (_, res) => {

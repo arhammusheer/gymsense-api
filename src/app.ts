@@ -22,6 +22,7 @@ app.use(helmet());
 app.use(
   cors({
     allowedHeaders: ["Content-Type", "Authorization"],
+    exposedHeaders: ["Set-Cookie"],
   })
 );
 

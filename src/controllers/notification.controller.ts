@@ -9,7 +9,8 @@ export const notifications = async (
   next: NextFunction
 ) => {
   try {
-    const token = req.query.token as string;
+    const token = req.cookies.token;
+		
     if (!token) {
       throw new Error("401:Missing token");
     }

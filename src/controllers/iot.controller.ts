@@ -183,6 +183,41 @@ const iotController = {
       next(err);
     }
   },
+
+  // DELETE
+  delete: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params as { id: string };
+      const user = req.user;
+
+      if (!user) {
+        throw new Error("401: Not authenticated");
+      }
+
+      if (
+        !user.permissions.hasPermission({
+          domain: "iot",
+          action: "delete",
+          target: id,
+        }) ||
+        !user.permissions.hasPermission({
+          domain: "iot",
+          action: "delete",
+          target: "*",
+        })
+      ) {
+        throw new Error(
+          `403:Insufficient permissions, need 'iot:delete:${id}'`
+        );
+      }
+
+      await Iot.delete(id);
+
+      res.json({ status: true });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
 
 export default iotController;

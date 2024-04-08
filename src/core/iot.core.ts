@@ -180,4 +180,12 @@ export default class Iot {
       data,
     });
   }
+
+  public static async delete(id: string) {
+    return prisma.iot.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }

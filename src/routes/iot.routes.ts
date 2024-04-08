@@ -8,6 +8,7 @@ const iotRouter = Router();
 // Update IoT status
 iotRouter.post("/status", iotController.statusUpdate);
 iotRouter.post("/create", requireToken, iotController.create);
+iotRouter.delete("/:id", requireToken, iotController.delete);
 
 // Removes secrets when token is not present
 iotRouter.get("/:id", optionalToken, iotController.get);

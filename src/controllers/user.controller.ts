@@ -149,6 +149,16 @@ const userController = {
       next(err);
     }
   },
+
+  async logout(req: Request, res: Response, next: NextFunction) {
+    try {
+      res.clearCookie("token");
+      res.json({ status: true });
+    } catch (err) {
+      next(err);
+    }
+  }
+  
 };
 
 export default userController;

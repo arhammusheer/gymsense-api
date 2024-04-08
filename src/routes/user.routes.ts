@@ -1,5 +1,6 @@
 import { Router } from "express";
 import userController from "../controllers/user.controller";
+import { optionalToken } from "../middleware/requireToken";
 
 const userRouter = Router();
 
@@ -15,5 +16,8 @@ userRouter.post("/", userController.getList);
 
 // Recover session from token
 userRouter.post("/recover", userController.recoverLogin);
+
+// Logout route
+userRouter.post("/logout", optionalToken, userController.logout);
 
 export default userRouter;

@@ -68,6 +68,16 @@ const iotController = {
         action: "read",
         target: iot.id,
       });
+      await req.user.permissions.addPermission({
+        domain: "iot",
+        action: "update",
+        target: iot.id,
+      });
+      await req.user.permissions.addPermission({
+        domain: "iot",
+        action: "delete",
+        target: iot.id,
+      });
 
       res.json({ iot });
     } catch (err) {

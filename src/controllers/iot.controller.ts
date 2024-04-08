@@ -61,15 +61,14 @@ const iotController = {
         throw new Error("403:Insufficient permissions, need 'iot:create:*'");
       }
 
-      console.log(
-        req.user.permissions.hasPermission({
-          domain: "iot",
-          action: "create",
-          target: "*",
-        })
-      );
-
       const iot = await Iot.create();
+      // Add permission for created Iot to user
+      await req.user.permissions.addPermission({
+        domain: "iot",
+        action: "read",
+        target: iot.id,
+      });
+
       res.json({ iot });
     } catch (err) {
       next(err);

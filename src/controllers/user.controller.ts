@@ -18,8 +18,9 @@ const userController = {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "none",
-        domain: process.env.NODE_ENV === "production" ? "sdp.croissant.one" : "",
-        expires: new Date(Date.now() + 1000 * 60 * 60 ), // 1 hour
+        domain:
+          process.env.NODE_ENV === "production" ? "sdp.croissant.one" : "",
+        expires: new Date(Date.now() + 1000 * 60 * 60), // 1 hour
       });
 
       res.json({ user, token });
@@ -31,12 +32,17 @@ const userController = {
   async recoverLogin(req: Request, res: Response, next: NextFunction) {
     try {
       const token = req.cookies.token;
-      res.json({user: req.user.toJSON(), token: token});
+      const user = await UserCore.fromToken(token);
+
+      if (!user) {
+        throw new Error("401:Invalid token");
+      }
+
+      res.json({ user, token });
     } catch (err) {
       next(err);
     }
   },
-
 
   async register(req: Request, res: Response, next: NextFunction) {
     try {
@@ -134,9 +140,6 @@ const userController = {
         offset: string;
         users: string[];
       };
-
-
-        
 
       const parsedLimit = parseInt(limit) || 10;
       const parsedOffset = parseInt(offset) || 0;

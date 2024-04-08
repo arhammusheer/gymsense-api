@@ -24,7 +24,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
     exposedHeaders: ["Set-Cookie"],
     credentials: true,
-    origin: /croissant\.one$/,
+    origin: [/croissant\.one$/, /localhost:\d+$/],
   })
 );
 

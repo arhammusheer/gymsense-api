@@ -100,6 +100,10 @@ const iotController = {
 
       const iot = await Iot.get(id, hasPermission);
 
+      if (!iot) {
+        throw new Error("404:IoT not found");
+      }
+
       res.json({
         status: true,
         data: iot,

@@ -154,6 +154,7 @@ const userController = {
     try {
       res.clearCookie("token", {
         sameSite: "none",
+        httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         domain:
           process.env.NODE_ENV === "production" ? "sdp.croissant.one" : "",

@@ -152,7 +152,13 @@ const userController = {
 
   async logout(req: Request, res: Response, next: NextFunction) {
     try {
-      res.clearCookie("token");
+      res.clearCookie("token", {
+        sameSite: "none",
+        secure: process.env.NODE_ENV === "production",
+        domain:
+          process.env.NODE_ENV === "production" ? "sdp.croissant.one" : "",
+          
+      });
       res.json({ status: true });
     } catch (err) {
       next(err);

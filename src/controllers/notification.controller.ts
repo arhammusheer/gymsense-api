@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import SSECore from "../core/sse.core";
 
 // SSE handler
 export const notifications = (
@@ -7,21 +8,11 @@ export const notifications = (
   next: NextFunction
 ) => {
   try {
-    res.setHeader("Content-Type", "text/event-stream");
-    res.setHeader("Cache-Control", "no-cache");
-    res.setHeader("Connection", "keep-alive");
+    const sse = new SSECore(req, res);
 
-    res.write("data: Connected\n\n");
-
-    // pings every 5 seconds
-    const interval = setInterval(() => {
-      res.write("data: ping\n\n");
-    }, 5000);
-
-    req.on("close", () => {
-      clearInterval(interval);
-      res.end();
-    });
+		req.on("close", () => {
+			sse.close();
+		});
   } catch (err) {
     next(err);
   }

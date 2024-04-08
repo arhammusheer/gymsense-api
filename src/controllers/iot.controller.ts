@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import Hub from "../core/hub.core";
 import Iot from "../core/iot.core";
 import { bodyFieldExist } from "../core/utils";
+import SSECore from "../core/sse.core";
 
 const iotController = {
   statusUpdate: async (req: Request, res: Response, next: NextFunction) => {
@@ -42,6 +43,17 @@ const iotController = {
 
       // Update occupancy
       await iot.updateOccupancy({ occupancy });
+
+      // Send real-time update
+      SSECore.sendToAll({
+        domain: "iot",
+        data: {
+          id: iot.id,
+          name: iot.name,
+          occupancy,
+          location: iot.location,
+        },
+      });
 
       res.json({ status: true });
     } catch (err) {
@@ -212,7 +224,7 @@ const iotController = {
       }
 
       await Iot.delete(id);
-      
+
       await user.permissions.removePermission({
         domain: "iot",
         action: "read",
@@ -228,7 +240,6 @@ const iotController = {
         action: "delete",
         target: id,
       });
-      
 
       res.json({ status: true });
     } catch (err) {

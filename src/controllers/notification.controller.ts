@@ -11,10 +11,12 @@ export const notifications = async (
 ) => {
   try {
     // Randomly generate an anonymous ID
-    const anonyID = Math.random().toString(36).substring(7); // Random ID
+    const anonyID = req.query.anonyID as string;
+
+    if (!anonyID) {
+      throw new Error("401: Missing anonyID query parameter");
+    }
     // Set this in cookie
-    res.cookie("sse_id", anonyID, { httpOnly: true });
-    res.flushHeaders(); // Flush the headers to set the cookie
 
     const sse = new SSECore(anonyID, res);
 
@@ -36,7 +38,7 @@ export const notifyWhenAvailable = async (
   next: NextFunction
 ) => {
   try {
-    const anonyID = req.cookies.sse_id;
+    const anonyID = req.query.anonyID as string;
     const { iotId } = req.body as { iotId: string };
 
     if (!anonyID) {

@@ -23,6 +23,8 @@ export const notifications = async (
     req.on("close", () => {
       // Remove the connection
       sse.close();
+      // Clear all notifications for this user
+      NotificationEvent.remove(anonyID);
     });
   } catch (err) {
     next(err);

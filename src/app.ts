@@ -9,7 +9,10 @@ import OpenApi from "./openapi";
 import publicRouter from "./routes/public.routes";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
-import { notifications } from "./controllers/notification.controller";
+import {
+  notifications,
+  notifyWhenAvailable,
+} from "./controllers/notification.controller";
 import { requireToken } from "./middleware/requireToken";
 
 const app = express();
@@ -36,6 +39,7 @@ app.use("/user", userRouter);
 app.use("/public", publicRouter);
 
 app.get("/notifications", notifications);
+app.post("/notifications", notifyWhenAvailable);
 
 // Health check
 app.get("/", (_, res) => {

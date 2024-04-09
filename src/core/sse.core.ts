@@ -30,10 +30,10 @@ const connections = new Set<SSECore>();
 
 export default class SSECore {
   connection: Connection;
-  constructor(user: UserCore, res: Response) {
+  constructor(connectionId: string, res: Response) {
     this.connection = {
       response: res,
-      id: user.email,
+      id: connectionId,
     };
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
@@ -69,9 +69,9 @@ export default class SSECore {
     }
   }
 
-  static sendToUser(email: string, data: IotEvent | NotificationEvent) {
+  static sendToUser(anonyID: string, data: IotEvent | NotificationEvent) {
     for (const connection of connections) {
-      if (connection.connection.id === email) {
+      if (connection.connection.id === anonyID) {
         connection.send(data);
       }
     }

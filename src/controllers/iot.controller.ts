@@ -3,6 +3,7 @@ import Hub from "../core/hub.core";
 import Iot from "../core/iot.core";
 import { bodyFieldExist } from "../core/utils";
 import SSECore from "../core/sse.core";
+import NotificationEvent from "../core/notificationevent.core";
 
 const iotController = {
   statusUpdate: async (req: Request, res: Response, next: NextFunction) => {
@@ -44,7 +45,12 @@ const iotController = {
       // Update occupancy
       await iot.updateOccupancy({ occupancy });
 
-      // Send real-time update
+      if (!occupancy) {
+        // Notify user
+        NotificationEvent.isNowAvailable(iot.id);
+      }
+
+      // Send real-time update to all clients for dashboard
       SSECore.sendToAll({
         domain: "iot",
         data: {

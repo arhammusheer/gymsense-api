@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import SSECore from "../core/sse.core";
 import UserCore from "../core/user.core";
+import NotificationEvent from "../core/notificationevent.core";
 
 // SSE handler
 export const notifications = async (
@@ -9,21 +10,45 @@ export const notifications = async (
   next: NextFunction
 ) => {
   try {
-    const token = req.cookies.token;
-		
-    if (!token) {
-      throw new Error("401:Missing token");
-    }
-    const user = await UserCore.fromToken(token);
+    // Randomly generate an anonymous ID
+    const anonyID = Math.random().toString(36).substring(7); // Random ID
 
-    if (!user) {
-      throw new Error("401:Invalid token");
-    }
+    const sse = new SSECore(anonyID, res);
 
-    const sse = new SSECore(user, res);
+    // Set this in cookie
+    res.cookie("sse_id", anonyID, { httpOnly: true });
 
     req.on("close", () => {
+      // Remove the connection
       sse.close();
+
+      // Remove the cookie
+      res.clearCookie("sse_id");
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const notifyWhenAvailable = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const anonyID = req.cookies.sse_id;
+    const { iotId } = req.body as { iotId: string };
+
+    if (!anonyID) {
+      throw new Error(
+        "401: Missing sse_id cookie, please connect to the SSE endpoint first"
+      );
+    }
+
+    await NotificationEvent.initialize(anonyID, iotId);
+    
+    res.json({
+      status: "success",
     });
   } catch (err) {
     next(err);

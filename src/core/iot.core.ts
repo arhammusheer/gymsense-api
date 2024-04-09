@@ -25,6 +25,10 @@ export default class Iot {
     return this.data.location;
   }
 
+  get occupancy() {
+    return this.data.occupancy;
+  }
+
   private constructor(data: IotData & { hubId: string }) {
     this.data = data;
     this.hubId = data.hubId;

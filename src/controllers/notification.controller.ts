@@ -23,9 +23,6 @@ export const notifications = async (
     req.on("close", () => {
       // Remove the connection
       sse.close();
-
-      // Remove the cookie
-      res.clearCookie("sse_id");
     });
   } catch (err) {
     next(err);

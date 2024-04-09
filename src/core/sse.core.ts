@@ -42,10 +42,6 @@ export default class SSECore {
 
     connections.add(this);
 
-    this.send({
-      domain: "notification",
-      data: { message: "You'll now receive real-time updates" },
-    });
   }
 
   send(data: IotEvent | NotificationEvent) {

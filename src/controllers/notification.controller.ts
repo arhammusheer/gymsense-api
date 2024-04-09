@@ -12,11 +12,11 @@ export const notifications = async (
   try {
     // Randomly generate an anonymous ID
     const anonyID = Math.random().toString(36).substring(7); // Random ID
-
-    const sse = new SSECore(anonyID, res);
-
     // Set this in cookie
     res.cookie("sse_id", anonyID, { httpOnly: true });
+    res.flushHeaders(); // Flush the headers to set the cookie
+
+    const sse = new SSECore(anonyID, res);
 
     req.on("close", () => {
       // Remove the connection
@@ -46,7 +46,7 @@ export const notifyWhenAvailable = async (
     }
 
     await NotificationEvent.initialize(anonyID, iotId);
-    
+
     res.json({
       status: "success",
     });

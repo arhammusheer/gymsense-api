@@ -40,6 +40,7 @@ export default class NotificationEvent {
         message: `IoT Device ${this.iot.name} is now available`,
       },
     });
+    this.complete();
   }
 
   static isNowAvailable(iotId: string) {
@@ -48,6 +49,10 @@ export default class NotificationEvent {
         event.notify();
       }
     }
+  }
+
+  complete() {
+    notify.delete(this);
   }
 
   static remove(userId: string) {

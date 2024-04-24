@@ -97,6 +97,17 @@ const iotController = {
         target: iot.id,
       });
 
+      // Send real-time update to all clients for dashboard
+      SSECore.sendToAll({
+        domain: "iot",
+        data: {
+          id: iot.id,
+          name: iot.name,
+          occupancy: iot.occupancy,
+          location: iot.location,
+        },
+      });
+
       res.json({ iot });
     } catch (err) {
       next(err);

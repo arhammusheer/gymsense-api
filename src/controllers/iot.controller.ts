@@ -196,6 +196,17 @@ const iotController = {
 
       const iot = await Iot.update(id, { name, location });
 
+      // Send real-time update to all clients for dashboard
+      SSECore.sendToAll({
+        domain: "iot",
+        data: {
+          id: iot.id,
+          name: iot.name,
+          occupancy: iot.occupancy,
+          location: iot.location,
+        },
+      });
+
       res.json({ status: true, data: iot });
     } catch (err) {
       next(err);

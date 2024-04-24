@@ -19,7 +19,7 @@ model Iot {
   
 
   occupancy    Boolean @default(false)
-  batteryLevel Int     @default(-1)
+  batteryLevel Float     @default(-1)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

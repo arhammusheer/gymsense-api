@@ -53,6 +53,7 @@ const iotController = {
       // Send real-time update to all clients for dashboard
       SSECore.sendToAll({
         domain: "iot",
+        action: "update",
         data: {
           id: iot.id,
           name: iot.name,
@@ -100,6 +101,7 @@ const iotController = {
       // Send real-time update to all clients for dashboard
       SSECore.sendToAll({
         domain: "iot",
+        action: "create",
         data: {
           id: iot.id,
           name: iot.name,
@@ -210,6 +212,7 @@ const iotController = {
       // Send real-time update to all clients for dashboard
       SSECore.sendToAll({
         domain: "iot",
+        action: "update",
         data: {
           id: iot.id,
           name: iot.name,
@@ -267,6 +270,18 @@ const iotController = {
         domain: "iot",
         action: "delete",
         target: id,
+      });
+
+      // Send real-time update to all clients for dashboard
+      SSECore.sendToAll({
+        domain: "iot",
+        action: "delete",
+        data: {
+          id,
+          location: "",
+          name: "",
+          occupancy: false,
+        },
       });
 
       res.json({ status: true });

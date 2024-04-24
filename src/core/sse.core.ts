@@ -7,6 +7,7 @@ interface SSEEvent {
 }
 interface IotEvent extends SSEEvent {
   domain: "iot";
+  action: "update" | "create" | "delete";
   data: {
     id: string;
     name: string;

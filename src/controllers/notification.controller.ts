@@ -55,3 +55,27 @@ export const notifyWhenAvailable = async (
     next(err);
   }
 };
+
+export const listNotifications = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = req.user;
+    const { id } = req.query as { id: string };
+
+    if (!user) {
+      throw new Error("401: Not authenticated");
+    }
+
+    const notifications = NotificationEvent.viewAllRequests(id);
+
+    res.json({
+      status: true,
+      data: notifications,
+    });
+  } catch (err) {
+    next(err);
+  }
+};

@@ -1,6 +1,5 @@
 import Iot from "./iot.core";
 import SSECore from "./sse.core";
-import UserCore from "./user.core";
 
 export const notify = new Set<NotificationEvent>();
 
@@ -61,5 +60,12 @@ export default class NotificationEvent {
         notify.delete(event);
       }
     }
+  }
+
+  static viewAllRequests(userId?: string) {
+    if (userId) {
+      return Array.from(notify).filter((event) => event.userId === userId);
+    }
+    return Array.from(notify);
   }
 }

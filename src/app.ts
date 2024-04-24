@@ -10,6 +10,7 @@ import publicRouter from "./routes/public.routes";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import {
+  listNotifications,
   notifications,
   notifyWhenAvailable,
 } from "./controllers/notification.controller";
@@ -40,6 +41,7 @@ app.use("/public", publicRouter);
 
 app.get("/notifications", notifications);
 app.post("/notifications", notifyWhenAvailable);
+app.get("/notifications/list", requireToken, listNotifications);
 
 // Health check
 app.get("/", (_, res) => {

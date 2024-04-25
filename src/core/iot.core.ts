@@ -228,12 +228,14 @@ export default class Iot {
     // { from: Date, to: Date, occupancy: boolean }[]
     const timeline: { from: Date; to: Date; occupancy: boolean }[] = [];
 
-    let currentOccupancy = false;
-    let currentFrom = fromDateTime;
+    let currentOccupancy = !(logs[0].value == "true");
+    let currentFrom = logs[0].createdAt;
 
+    // Iterate over logs to create timeline
     for (const log of logs) {
       const value = log.value === "true";
-      if (currentOccupancy !== value) {
+
+      if (value !== currentOccupancy) {
         timeline.push({
           from: currentFrom,
           to: log.createdAt,
@@ -242,11 +244,10 @@ export default class Iot {
 
         currentOccupancy = value;
         currentFrom = log.createdAt;
-
-        continue;
       }
     }
-    
+
+    // Add last entry
     timeline.push({
       from: currentFrom,
       to: toDateTime,

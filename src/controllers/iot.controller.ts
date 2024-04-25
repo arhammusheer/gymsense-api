@@ -59,6 +59,7 @@ const iotController = {
           name: iot.name,
           occupancy,
           location: iot.location,
+          isOffline: iot.isOffline,
         },
       });
 
@@ -107,6 +108,7 @@ const iotController = {
           name: iot.name,
           occupancy: iot.occupancy,
           location: iot.location,
+          isOffline: iot.isOffline,
         },
       });
 
@@ -161,7 +163,7 @@ const iotController = {
         ? await Iot.getTimeline(id, fromDateTime, toDateTime)
         : null;
 
-        if (!iot) {
+      if (!iot) {
         throw new Error("404:IoT not found");
       }
 
@@ -209,7 +211,11 @@ const iotController = {
     try {
       const { id } = req.params as { id: string };
       const user = req.user;
-      const { name, location } = req.body as { name: string; location: string };
+      const { name, location, isOffline } = req.body as {
+        name: string;
+        location: string;
+        isOffline: boolean;
+      };
 
       if (!user) {
         throw new Error("401: Not authenticated");
@@ -232,7 +238,7 @@ const iotController = {
         );
       }
 
-      const iot = await Iot.update(id, { name, location });
+      const iot = await Iot.update(id, { name, location, isOffline });
 
       // Send real-time update to all clients for dashboard
       SSECore.sendToAll({
@@ -243,6 +249,7 @@ const iotController = {
           name: iot.name,
           occupancy: iot.occupancy,
           location: iot.location,
+          isOffline: iot.isOffline,
         },
       });
 
@@ -306,6 +313,7 @@ const iotController = {
           location: "",
           name: "",
           occupancy: false,
+          isOffline: false,
         },
       });
 

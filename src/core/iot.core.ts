@@ -7,6 +7,7 @@ interface restrictedIotData {
   occupancy: boolean;
   name: string;
   location: string;
+  isOffline: boolean;
 }
 
 export default class Iot {
@@ -27,6 +28,10 @@ export default class Iot {
 
   get occupancy() {
     return this.data.occupancy;
+  }
+
+  get isOffline() {
+    return this.data.isOffline;
   }
 
   private constructor(data: IotData & { hubId: string }) {
@@ -147,6 +152,7 @@ export default class Iot {
         occupancy: true,
         name: true,
         location: true,
+        isOffline: true,
       },
     });
 
@@ -187,7 +193,7 @@ export default class Iot {
 
   public static async update(
     id: string,
-    data: { name: string; location: string }
+    data: { name: string; location: string; isOffline: boolean }
   ) {
     return prisma.iot.update({
       where: {

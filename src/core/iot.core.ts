@@ -231,6 +231,8 @@ export default class Iot {
       },
     });
 
+    if (!logs.length) return [];
+
     // Convert logs to timeline
     // { from: Date, to: Date, occupancy: boolean }[]
     const timeline: { from: Date; to: Date; occupancy: boolean }[] = [];

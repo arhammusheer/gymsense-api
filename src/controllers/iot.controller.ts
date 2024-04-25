@@ -119,6 +119,25 @@ const iotController = {
   get: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params as { id: string };
+      const {
+        getTimeline = false,
+        from = "",
+        to = "",
+      } = req.query as unknown as {
+        getTimeline: boolean;
+        from: string;
+        to: string;
+      };
+
+      const toDateTime = to ? new Date(to) : new Date();
+      const fromDateTime = from
+        ? new Date(from)
+        : new Date(toDateTime.getTime() - 1000 * 60 * 60 * 24); // 24 hours
+
+      if (fromDateTime > toDateTime) {
+        throw new Error("400:Invalid date range");
+      }
+
       const user = req.user;
 
       const hasPermission = !!user
@@ -136,13 +155,18 @@ const iotController = {
 
       const iot = await Iot.get(id, hasPermission);
 
+      const timeline = getTimeline
+        ? await Iot.getTimeline(id, fromDateTime, toDateTime)
+        : null;
+
+      console.log(timeline);
       if (!iot) {
         throw new Error("404:IoT not found");
       }
 
       res.json({
         status: true,
-        data: iot,
+        data: timeline ? { ...iot, timeline } : iot,
       });
     } catch (err) {
       next(err);

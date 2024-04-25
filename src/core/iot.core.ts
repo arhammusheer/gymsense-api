@@ -204,4 +204,55 @@ export default class Iot {
       },
     });
   }
+
+  public static async getTimeline(
+    id: string,
+    fromDateTime: Date,
+    toDateTime: Date
+  ) {
+    const logs = await prisma.iotLog.findMany({
+      where: {
+        iotId: id,
+        changeType: "OCCUPANCY",
+        createdAt: {
+          gte: fromDateTime,
+          lte: toDateTime,
+        },
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+
+    // Convert logs to timeline
+    // { from: Date, to: Date, occupancy: boolean }[]
+    const timeline: { from: Date; to: Date; occupancy: boolean }[] = [];
+
+    let currentOccupancy = false;
+    let currentFrom = fromDateTime;
+
+    for (const log of logs) {
+      const value = log.value === "true";
+      if (currentOccupancy !== value) {
+        timeline.push({
+          from: currentFrom,
+          to: log.createdAt,
+          occupancy: currentOccupancy,
+        });
+
+        currentOccupancy = value;
+        currentFrom = log.createdAt;
+
+        continue;
+      }
+    }
+    
+    timeline.push({
+      from: currentFrom,
+      to: toDateTime,
+      occupancy: currentOccupancy,
+    });
+
+    return timeline;
+  }
 }

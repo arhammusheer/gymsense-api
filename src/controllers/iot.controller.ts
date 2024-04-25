@@ -120,14 +120,16 @@ const iotController = {
     try {
       const { id } = req.params as { id: string };
       const {
-        getTimeline = false,
+        getTimeline = "false",
         from = "",
         to = "",
       } = req.query as unknown as {
-        getTimeline: boolean;
+        getTimeline: "true" | "false";
         from: string;
         to: string;
       };
+
+      const isGetTimeline = getTimeline === "true";
 
       const toDateTime = to ? new Date(to) : new Date();
       const fromDateTime = from
@@ -155,7 +157,7 @@ const iotController = {
 
       const iot = await Iot.get(id, hasPermission);
 
-      const timeline = getTimeline
+      const timeline = isGetTimeline
         ? await Iot.getTimeline(id, fromDateTime, toDateTime)
         : null;
 

@@ -218,10 +218,11 @@ const iotController = {
     try {
       const { id } = req.params as { id: string };
       const user = req.user;
-      const { name, location, isOffline } = req.body as {
+      const { name, location, isOffline, occupancy } = req.body as {
         name: string;
         location: string;
         isOffline: boolean;
+        occupancy: boolean;
       };
 
       if (!user) {
@@ -245,7 +246,12 @@ const iotController = {
         );
       }
 
-      const iot = await Iot.update(id, { name, location, isOffline });
+      const iot = await Iot.update(id, {
+        name,
+        location,
+        isOffline,
+        occupancy,
+      });
 
       // Send real-time update to all clients for dashboard
       SSECore.sendToAll({

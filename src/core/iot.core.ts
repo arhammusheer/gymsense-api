@@ -194,7 +194,12 @@ export default class Iot {
 
   public static async update(
     id: string,
-    data: { name: string; location: string; isOffline: boolean }
+    data: {
+      name: string;
+      location: string;
+      isOffline: boolean;
+      occupancy: boolean;
+    }
   ) {
     return prisma.iot.update({
       where: {

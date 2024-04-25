@@ -187,6 +187,7 @@ export default class Iot {
         occupancy: true,
         name: true,
         location: true,
+        isOffline: true,
       },
     });
   }

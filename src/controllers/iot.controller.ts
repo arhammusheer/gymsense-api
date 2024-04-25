@@ -50,6 +50,12 @@ const iotController = {
         NotificationEvent.isNowAvailable(iot.id);
       }
 
+      const toDateTime = new Date();
+      const fromDateTime = new Date(toDateTime.getTime() - 1000 * 60 * 60 * 24); // 24 hours
+
+      // Get timeline
+      const timeline = await Iot.getTimeline(iot.id, fromDateTime, toDateTime);
+
       // Send real-time update to all clients for dashboard
       SSECore.sendToAll({
         domain: "iot",
@@ -60,6 +66,7 @@ const iotController = {
           occupancy,
           location: iot.location,
           isOffline: iot.isOffline,
+          timeline,
         },
       });
 

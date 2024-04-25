@@ -14,6 +14,7 @@ interface IotEvent extends SSEEvent {
     occupancy: boolean;
     location: string;
     isOffline: boolean;
+    timeline?: { from: Date; to: Date; occupancy: boolean }[];
   };
 }
 interface NotificationEvent extends SSEEvent {
@@ -43,7 +44,6 @@ export default class SSECore {
     res.flushHeaders();
 
     connections.add(this);
-
   }
 
   send(data: IotEvent | NotificationEvent) {

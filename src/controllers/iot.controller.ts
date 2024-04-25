@@ -161,8 +161,7 @@ const iotController = {
         ? await Iot.getTimeline(id, fromDateTime, toDateTime)
         : null;
 
-      console.log(timeline);
-      if (!iot) {
+        if (!iot) {
         throw new Error("404:IoT not found");
       }
 

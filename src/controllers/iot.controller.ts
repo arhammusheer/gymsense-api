@@ -149,6 +149,9 @@ const iotController = {
         throw new Error("400:Invalid date range");
       }
 
+      // Offline check
+      await Iot.markOfflineIfNoUpdate(id);
+
       const user = req.user;
 
       const hasPermission = !!user
@@ -185,6 +188,9 @@ const iotController = {
 
   getAll: async (req: Request, res: Response, next: NextFunction) => {
     try {
+      // Offline check
+      await Iot.markOfflineIfNoUpdate();
+
       const user = req.user;
       if (!user) {
         return res.json({ status: true, data: await Iot.getAll() });

@@ -270,4 +270,28 @@ export default class Iot {
 
     return timeline;
   }
+
+  public static async markOfflineIfNoUpdate(id?: string) {
+    const iots = await prisma.iot.findMany({
+      where: {
+        isOffline: false,
+        id: id ? { equals: id } : undefined,
+        updatedAt: {
+          // 1 day
+          lte: new Date(Date.now() - 24 * 60 * 60 * 1000),
+        },
+      },
+    });
+
+    for (const iot of iots) {
+      await prisma.iot.update({
+        where: {
+          id: iot.id,
+        },
+        data: {
+          isOffline: true,
+        },
+      });
+    }
+  }
 }

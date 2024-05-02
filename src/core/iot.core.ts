@@ -294,4 +294,27 @@ export default class Iot {
       });
     }
   }
+
+  public static async markOnline(id: string): Promise<boolean> {
+    const iot = await prisma.iot.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!iot) throw new Error("Iot device not found");
+
+    if (!iot.isOffline) return false;
+
+    await prisma.iot.update({
+      where: {
+        id,
+      },
+      data: {
+        isOffline: false,
+      },
+    });
+
+    return true;
+  }
 }

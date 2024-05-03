@@ -48,6 +48,9 @@ const iotController = {
       // Online check
       await Iot.markOnline(iot.id);
 
+      // Reload iot
+      await iot.reload();
+
       if (!occupancy) {
         // Notify user
         NotificationEvent.isNowAvailable(iot.id);

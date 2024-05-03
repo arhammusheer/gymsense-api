@@ -317,4 +317,16 @@ export default class Iot {
 
     return true;
   }
+
+  public async reload() {
+    const iot = await prisma.iot.findUnique({
+      where: {
+        id: this.data.id,
+      },
+    });
+
+    if (!iot) throw new Error("Iot device not found");
+
+    this.data = iot;
+  }
 }

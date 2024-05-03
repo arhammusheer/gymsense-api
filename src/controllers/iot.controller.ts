@@ -48,7 +48,6 @@ const iotController = {
       // Online check
       await Iot.markOnline(iot.id);
 
-
       if (!occupancy) {
         // Notify user
         NotificationEvent.isNowAvailable(iot.id);
@@ -262,6 +261,16 @@ const iotController = {
         isOffline,
         occupancy,
       });
+
+      // Add log for update if occupancy is changed
+      if (occupancy) {
+        const i = await Iot.initialize({
+          id,
+          hubId: "INTERNAL",
+          key: "hub-INTERNAL",
+        });
+        await i.updateOccupancy({ occupancy });
+      }
 
       // Send real-time update to all clients for dashboard
       SSECore.sendToAll({
